@@ -85,7 +85,7 @@
 			}
 		</style>
 		<script>
-			var checkpoint,d=0,dis,UpOrDown=1,velocity=0,cou=0,y=0,borngo1,borngo2,highOfA,highOfC,sT,t,t1,t2,start=-10,coordinateBall,coordinateA,coordinateC,A=1,C=1;
+			var checkpoint,d=0,dis,UpOrDown=1,velocity=0,cou=0,y=0,borngo1,borngo2,highOfA,highOfC,sT,t,t1,t2,start=-10,coordinateBall,coordinateA,coordinateC,A=1,C=1,onclicktimes=0;
 			var timea=1,timec=1,onlockMykey=1,onlockCheat=1;
 			var rankA=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 			var rankB=["二十","十九","十八","十七","十六","十五","十四","十三","十二","十一","十","九","八","七","六","五","四","~三~","~~二~~","~~~一~~~",]
@@ -109,6 +109,7 @@
 				coordinateC=0;
 				coordinateBall=0;
 				start=1;
+				onclicktimes++;
 				d=0;
 				dis=setInterval(distance,100);
 				checkpoint=setInterval(checkIsOver,1);
@@ -117,17 +118,20 @@
 				if(coordinateA[0]>=263&&coordinateA[0]<=313){
 					if(coordinateA[1]+highOfA>=coordinateBall[1]){
 						start=-1;
+						onclicktimes=0;
 						gameover();
 					}
 				}
 				if(coordinateC[0]>=263&&coordinateC[0]<=313){
 					if(coordinateC[1]<=coordinateBall[1]+50){
 						start=-2;
+						onclicktimes=0;
 						gameover();
 					}
 				}
 				if(coordinateBall[1]==137||coordinateBall[1]==587){
 					start=-3;
+					onclicktimes=0;
 					gameover();
 				}
 			}
@@ -139,8 +143,22 @@
 			function mykey(ev) {
 				event.preventDefault();
 				if(onlockMykey<0) return;
-				if(ev.which==32&&start>0) gravity();
-				if(ev.which==13) begin();
+				if(ev.which==32&&start>0) {
+					gravity();
+					onclicktimes=2;
+				}
+				if(ev.which==13) {
+					begin();
+					onclicktimes++;
+				}
+			}
+			function mymouse() {
+				if(onclicktimes==0) return;
+				if(onclicktimes==1) {
+					onclicktimes=2;
+					return;
+				}
+				gravity();
 			}
 			function go() {
 				Ball=document.getElementById("ball");
@@ -315,7 +333,7 @@
 			}
 		</script>
 	</head>
-	<body id="body" onkeydown="mykey(event);">
+	<body id="body" onkeydown="mykey(event);" onclick="mymouse();">
 		<div id="title"><b>飛行的球</b></div>
 		<div id="game_screen" class="setup"><div id="point">距離：0m</div></div></div>
 		<div id="rank" class="setup"><b>排行榜<br></b><span id="ranking">第一名：0m<br>第二名：0m<br>第三名：0m<br>第四名：0m<br>第五名：0m<br>第六名：0m<br>第七名：0m<br>第八名：0m<br>第九名：0m<br>第十名：0m<br>第十一名：0m<br>第十二名：0m<br>第十三名：0m<br>第十四名：0m<br>第十五名：0m<br>第十六名：0m<br>第十七名：0m<br>第十八名：0m<br>第十九名：0m</span></div>
